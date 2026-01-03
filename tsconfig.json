@@ -23,7 +23,8 @@
       "@/game/*": ["./app/[lang]/game/*"],
       "@/providers/*": ["./app/_providers/*"],
       "@/primitives/*": ["./app/_primitives/*"],
-      "@/dictionaries": ["./app/[lang]/dictionaries.ts"]
+      "@/dictionaries": ["./app/[lang]/dictionaries.ts"],
+      "@/word-bank/*": ["./word-bank/*"]
     }
   },
   "include": [
