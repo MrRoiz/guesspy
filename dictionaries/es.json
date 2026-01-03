@@ -29,11 +29,13 @@
     "title": "Tiempo de Discusión",
     "description": "Discute y descubre quién es el espía",
     "timeUp": "¡Se Acabó el Tiempo!",
+    "stopped": "Reloj Detenido",
     "timeUpDescription": "¡Se acabó el tiempo! Haz tus últimas conjeturas.",
     "spiesWere": "Los Espías Eran:",
     "hideSpies": "Ocultar Espías",
     "revealSpies": "Revelar Espías",
-    "playAgain": "Jugar de Nuevo"
+    "playAgain": "Jugar de Nuevo",
+    "stopTimer": "Detener el reloj"
   },
   "errors": {
     "playerNameRequired": "El nombre del jugador es obligatorio",

@@ -25,9 +25,14 @@ export const GameTimer: FC<GameTimerProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const [isExpired, setIsExpired] = useState(false);
+  const [isStopped, setIsStopped] = useState(false);
   const [showSpies, setShowSpies] = useState(false);
 
   useEffect(() => {
+    if (isStopped) {
+      return;
+    }
+
     if (timeLeft <= 0) {
       setIsExpired(true);
       return;
@@ -44,18 +49,20 @@ export const GameTimer: FC<GameTimerProps> = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timeLeft]);
+  }, [timeLeft, isStopped]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
   const getTimerColor = () => {
-    if (isExpired) return 'text-destructive';
-    if (timeLeft <= 30) return 'text-destructive';
-    if (timeLeft <= 60) return 'text-warning';
-    return 'text-foreground';
+    if (isExpired || isStopped) return "text-destructive";
+    if (timeLeft <= 30) return "text-destructive";
+    if (timeLeft <= 60) return "text-warning";
+    return "text-foreground";
   };
+
+  const isFinished = isExpired || isStopped;
 
   const spies = playerRoles.filter((player) => player.isSpy);
 
@@ -65,7 +72,9 @@ export const GameTimer: FC<GameTimerProps> = ({
         <div className="text-center">
           <h2 className="mb-2 font-bold text-2xl">{dict.timer.title}</h2>
           <p className="text-muted-foreground">
-            {isExpired ? dict.timer.timeUpDescription : dict.timer.description}
+            {isFinished
+              ? dict.timer.timeUpDescription
+              : dict.timer.description}
           </p>
         </div>
 
@@ -74,26 +83,32 @@ export const GameTimer: FC<GameTimerProps> = ({
             'flex h-64 w-64 items-center justify-center rounded-full border-4 shadow-lg transition-colors',
             getTimerColor(),
             {
-              'animate-pulse border-destructive': isExpired,
-              'border-destructive': timeLeft <= 30 && !isExpired,
-              'border-warning': timeLeft > 30 && timeLeft <= 60,
-              'border-border': timeLeft > 60,
+              "animate-pulse border-destructive": isExpired,
+              "border-destructive": (timeLeft <= 30 && !isFinished) || isStopped,
+              "border-warning": timeLeft > 30 && timeLeft <= 60 && !isFinished,
+              "border-border": timeLeft > 60 && !isFinished,
             },
           )}>
           <div className="text-center">
             <div className={cn('font-bold text-6xl', getTimerColor())}>
               {formattedTime}
             </div>
-            {isExpired && (
+            {isFinished && (
               <div className="mt-2 font-semibold text-xl">
-                {dict.timer.timeUp}
+                {isExpired ? dict.timer.timeUp : dict.timer.stopped}
               </div>
             )}
           </div>
         </div>
+
+        {!isFinished && (
+          <Button variant="outline" onClick={() => setIsStopped(true)}>
+            {dict.timer.stopTimer}
+          </Button>
+        )}
       </div>
 
-      {isExpired && (
+      {isFinished && (
         <div className="flex flex-col items-center gap-4">
           {showSpies && (
             <div className="rounded-lg border bg-card p-6 shadow-lg">

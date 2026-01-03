@@ -29,11 +29,13 @@
     "title": "Discussion Time",
     "description": "Discuss and figure out who the spy is",
     "timeUp": "Time's Up!",
+    "stopped": "Timer Stopped",
     "timeUpDescription": "Time's up! Make your final guesses.",
     "spiesWere": "The Spies Were:",
     "hideSpies": "Hide Spies",
     "revealSpies": "Reveal Spies",
-    "playAgain": "Play Again"
+    "playAgain": "Play Again",
+    "stopTimer": "Stop the timer"
   },
   "errors": {
     "playerNameRequired": "Player name is required",
