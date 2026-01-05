@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { type FC, useEffect, useState } from "react";
-import { cn } from "@/lib/cls";
-import { Button } from "@/primitives/components/ui/button";
-import { Dictionary } from "@/dictionaries";
+import { type FC, useEffect, useState } from 'react';
+import type { Dictionary } from '@/dictionaries';
+import { cn } from '@/lib/cls';
+import { Button } from '@/primitives/components/ui/button';
 
 const TIMER_DURATION = 120; // 2 minutes in seconds
 
@@ -18,7 +18,11 @@ interface GameTimerProps {
   dict: Dictionary;
 }
 
-export const GameTimer: FC<GameTimerProps> = ({ playerRoles, onPlayAgain, dict }) => {
+export const GameTimer: FC<GameTimerProps> = ({
+  playerRoles,
+  onPlayAgain,
+  dict,
+}) => {
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const [isExpired, setIsExpired] = useState(false);
   const [showSpies, setShowSpies] = useState(false);
@@ -44,13 +48,13 @@ export const GameTimer: FC<GameTimerProps> = ({ playerRoles, onPlayAgain, dict }
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
-  const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
   const getTimerColor = () => {
-    if (isExpired) return "text-destructive";
-    if (timeLeft <= 30) return "text-destructive";
-    if (timeLeft <= 60) return "text-warning";
-    return "text-foreground";
+    if (isExpired) return 'text-destructive';
+    if (timeLeft <= 30) return 'text-destructive';
+    if (timeLeft <= 60) return 'text-warning';
+    return 'text-foreground';
   };
 
   const spies = playerRoles.filter((player) => player.isSpy);
@@ -61,29 +65,29 @@ export const GameTimer: FC<GameTimerProps> = ({ playerRoles, onPlayAgain, dict }
         <div className="text-center">
           <h2 className="mb-2 font-bold text-2xl">{dict.timer.title}</h2>
           <p className="text-muted-foreground">
-            {isExpired
-              ? dict.timer.timeUpDescription
-              : dict.timer.description}
+            {isExpired ? dict.timer.timeUpDescription : dict.timer.description}
           </p>
         </div>
 
         <div
           className={cn(
-            "flex h-64 w-64 items-center justify-center rounded-full border-4 shadow-lg transition-colors",
+            'flex h-64 w-64 items-center justify-center rounded-full border-4 shadow-lg transition-colors',
             getTimerColor(),
             {
-              "animate-pulse border-destructive": isExpired,
-              "border-destructive": timeLeft <= 30 && !isExpired,
-              "border-warning": timeLeft > 30 && timeLeft <= 60,
-              "border-border": timeLeft > 60,
+              'animate-pulse border-destructive': isExpired,
+              'border-destructive': timeLeft <= 30 && !isExpired,
+              'border-warning': timeLeft > 30 && timeLeft <= 60,
+              'border-border': timeLeft > 60,
             },
           )}>
           <div className="text-center">
-            <div className={cn("font-bold text-6xl", getTimerColor())}>
+            <div className={cn('font-bold text-6xl', getTimerColor())}>
               {formattedTime}
             </div>
             {isExpired && (
-              <div className="mt-2 font-semibold text-xl">{dict.timer.timeUp}</div>
+              <div className="mt-2 font-semibold text-xl">
+                {dict.timer.timeUp}
+              </div>
             )}
           </div>
         </div>

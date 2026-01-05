@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useAtomValue } from "jotai";
-import { type FC, useCallback, useMemo, useState } from "react";
-import { GameCard } from "@/game/_components/card";
-import { gameSettingsAtom } from "../../_store/game-settings";
-import { GameTimer } from "./timer";
-import { Dictionary } from "@/dictionaries";
+import { useAtomValue } from 'jotai';
+import { type FC, useCallback, useMemo, useState } from 'react';
+import type { Dictionary } from '@/dictionaries';
+import { GameCard } from '@/game/_components/card';
+import { gameSettingsAtom } from '../../_store/game-settings';
+import { GameTimer } from './timer';
 
 export const Game: FC<{ dict: Dictionary }> = ({ dict }) => {
   const gameSettings = useAtomValue(gameSettingsAtom);
@@ -42,7 +42,11 @@ export const Game: FC<{ dict: Dictionary }> = ({ dict }) => {
   // Show timer once all players have checked their cards
   if (allPlayersChecked) {
     return (
-      <GameTimer playerRoles={playerRoles} onPlayAgain={handlePlayAgain} dict={dict} />
+      <GameTimer
+        playerRoles={playerRoles}
+        onPlayAgain={handlePlayAgain}
+        dict={dict}
+      />
     );
   }
 
@@ -60,12 +64,10 @@ export const Game: FC<{ dict: Dictionary }> = ({ dict }) => {
       <div className="text-center">
         <h2 className="mb-2 font-bold text-2xl">
           {dict.play.playerProgress
-            .replace("{current}", String(currentPlayerIndex + 1))
-            .replace("{total}", String(playerRoles.length))}
+            .replace('{current}', String(currentPlayerIndex + 1))
+            .replace('{total}', String(playerRoles.length))}
         </h2>
-        <p className="text-muted-foreground">
-          {dict.play.cardInstruction}
-        </p>
+        <p className="text-muted-foreground">{dict.play.cardInstruction}</p>
       </div>
 
       <GameCard

@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getDictionary, hasLocale } from '@/dictionaries';
-import { LocalUsersForm } from "./_components/form";
+import { LocalUsersForm } from './_components/form';
 
 const Page = async ({ params }: PageProps<'/[lang]/game/local/setup'>) => {
-  const { lang } = await params
+  const { lang } = await params;
   if (!hasLocale(lang)) notFound();
 
   const dict = await getDictionary(lang);

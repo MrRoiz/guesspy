@@ -1,0 +1,26 @@
+name: Check PR
+
+on: [pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: "Setup yarn"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Biome check
+        run: yarn link
+      - name: Typescript check
+        run: yarn type-check

@@ -1,11 +1,11 @@
-import { type FC, useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/cls";
-import { Button } from "@/primitives/components/ui/button";
-import { Dictionary } from "@/dictionaries";
+import { type FC, useEffect, useRef, useState } from 'react';
+import type { Dictionary } from '@/dictionaries';
+import { cn } from '@/lib/cls';
+import { Button } from '@/primitives/components/ui/button';
 
-const transitionClass = "duration-700";
+const transitionClass = 'duration-700';
 // biome-ignore lint/style/noNonNullAssertion: Trust me bro
-const changeOnMs = Number(transitionClass.split("-")[1]!) / 3;
+const changeOnMs = Number(transitionClass.split('-')[1]!) / 3;
 
 export const GameCard: FC<{
   player: { name: string; isSpy: boolean };
@@ -46,10 +46,10 @@ export const GameCard: FC<{
       <div className="perspective-midrange relative h-96 w-80 cursor-pointer border-0">
         <div
           className={cn(
-            "transform-3d relative h-full w-full transition-transform",
+            'transform-3d relative h-full w-full transition-transform',
             transitionClass,
             {
-              "rotate-y-180": isFlipped,
+              'rotate-y-180': isFlipped,
             },
           )}>
           {/* Front Face - Player Name */}
@@ -64,7 +64,9 @@ export const GameCard: FC<{
             {player.isSpy ? (
               <>
                 <div className="mb-4 text-6xl">🕵</div>
-                <h3 className="font-bold text-4xl text-destructive">{dict.card.spy}</h3>
+                <h3 className="font-bold text-4xl text-destructive">
+                  {dict.card.spy}
+                </h3>
               </>
             ) : (
               <>

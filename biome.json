@@ -15,6 +15,11 @@
     "indentWidth": 2,
     "bracketSameLine": true
   },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {

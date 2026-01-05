@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,21 +19,11 @@
       }
     ],
     "paths": {
-      "@/lib/*": [
-        "./app/_lib/*"
-      ],
-      "@/game/*": [
-        "./app/[lang]/game/*"
-      ],
-      "@/providers/*": [
-        "./app/_providers/*"
-      ],
-      "@/primitives/*": [
-        "./app/_primitives/*"
-      ],
-      "@/dictionaries": [
-        "./app/[lang]/dictionaries.ts"
-      ]
+      "@/lib/*": ["./app/_lib/*"],
+      "@/game/*": ["./app/[lang]/game/*"],
+      "@/providers/*": ["./app/_providers/*"],
+      "@/primitives/*": ["./app/_primitives/*"],
+      "@/dictionaries": ["./app/[lang]/dictionaries.ts"]
     }
   },
   "include": [
@@ -47,7 +33,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

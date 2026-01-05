@@ -1,14 +1,15 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useSetAtom } from "jotai";
-import { Plus, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import type { FC } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import z from "zod";
-import { Button } from "@/primitives/components/ui/button";
-import { Checkbox } from "@/primitives/components/ui/checkbox";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useSetAtom } from 'jotai';
+import { Plus, XIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import type { FC } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import z from 'zod';
+import type { Dictionary } from '@/dictionaries';
+import { Button } from '@/primitives/components/ui/button';
+import { Checkbox } from '@/primitives/components/ui/checkbox';
 import {
   Field,
   FieldDescription,
@@ -17,46 +18,49 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-} from "@/primitives/components/ui/field";
-import { Input } from "@/primitives/components/ui/input";
+} from '@/primitives/components/ui/field';
+import { Input } from '@/primitives/components/ui/input';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/primitives/components/ui/input-group";
-import { gameSettingsAtom } from "../../_store/game-settings";
-import { Dictionary } from "@/dictionaries";
+} from '@/primitives/components/ui/input-group';
+import { gameSettingsAtom } from '../../_store/game-settings';
 
 const MIN_PLAYERS = 3;
 
-const createLocalGameFormSchema = (dict: Dictionary) => z
-  .object({
-    players: z
-      .array(
-        z.object({
-          name: z.string().trim().nonempty(dict.errors.playerNameRequired),
-        }),
-      )
-      .min(MIN_PLAYERS),
-    numberOfSpies: z.string(),
-    randomNumberOfSpies: z.boolean(),
-  })
-  .refine(
-    ({ numberOfSpies, players, randomNumberOfSpies }) =>
-      randomNumberOfSpies || players.length > Number(numberOfSpies),
-    {
-      message: dict.errors.morePlayersThanSpies,
-      path: ["numberOfSpies"],
-    },
-  );
+const createLocalGameFormSchema = (dict: Dictionary) =>
+  z
+    .object({
+      players: z
+        .array(
+          z.object({
+            name: z.string().trim().nonempty(dict.errors.playerNameRequired),
+          }),
+        )
+        .min(MIN_PLAYERS),
+      numberOfSpies: z.string(),
+      randomNumberOfSpies: z.boolean(),
+    })
+    .refine(
+      ({ numberOfSpies, players, randomNumberOfSpies }) =>
+        randomNumberOfSpies || players.length > Number(numberOfSpies),
+      {
+        message: dict.errors.morePlayersThanSpies,
+        path: ['numberOfSpies'],
+      },
+    );
 
-export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({ dict, lang }) => {
+export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
+  dict,
+  lang,
+}) => {
   const localGameFormSchema = createLocalGameFormSchema(dict);
   const form = useForm<z.infer<typeof localGameFormSchema>>({
     defaultValues: {
-      players: Array.from({ length: MIN_PLAYERS }).map(() => ({ name: "" })),
-      numberOfSpies: "1",
+      players: Array.from({ length: MIN_PLAYERS }).map(() => ({ name: '' })),
+      numberOfSpies: '1',
       randomNumberOfSpies: false,
     },
     resolver: zodResolver(localGameFormSchema),
@@ -68,13 +72,13 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({ dict, l
     remove: removePlayer,
   } = useFieldArray({
     control: form.control,
-    name: "players",
+    name: 'players',
   });
 
   const setGameSettings = useSetAtom(gameSettingsAtom);
   const router = useRouter();
 
-  const randomNumberOfSpies = form.watch("randomNumberOfSpies");
+  const randomNumberOfSpies = form.watch('randomNumberOfSpies');
 
   const handleSubmit = (payload: z.infer<typeof localGameFormSchema>) => {
     setGameSettings(payload);
@@ -87,7 +91,10 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({ dict, l
         <FieldSet>
           <FieldLegend>{dict.setup.title}</FieldLegend>
           <FieldDescription>
-            {dict.setup.description.replace("{minPlayers}", String(MIN_PLAYERS))}
+            {dict.setup.description.replace(
+              '{minPlayers}',
+              String(MIN_PLAYERS),
+            )}
           </FieldDescription>
           <FieldGroup>
             <Controller
@@ -121,7 +128,7 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({ dict, l
                       <Checkbox
                         onCheckedChange={(value) => {
                           onChange(value);
-                          form.trigger("numberOfSpies");
+                          form.trigger('numberOfSpies');
                         }}
                         checked={value}
                       />
@@ -145,14 +152,20 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({ dict, l
                     data-invalid={fieldState.invalid}
                     className="flex sm:flex-row">
                     <FieldLabel>
-                      {dict.setup.playerLabel.replace("{index}", String(index + 1))}
+                      {dict.setup.playerLabel.replace(
+                        '{index}',
+                        String(index + 1),
+                      )}
                     </FieldLabel>
                     <div>
                       <InputGroup>
                         <InputGroupInput
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          placeholder={dict.setup.playerPlaceholder.replace("{index}", String(index + 1))}
+                          placeholder={dict.setup.playerPlaceholder.replace(
+                            '{index}',
+                            String(index + 1),
+                          )}
                         />
                         {players.length > MIN_PLAYERS && (
                           <InputGroupAddon align="inline-end">
@@ -161,7 +174,10 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({ dict, l
                               variant="ghost"
                               size="icon-xs"
                               onClick={() => removePlayer(index)}
-                              aria-label={dict.setup.removePlayer.replace("{index}", String(index + 1))}>
+                              aria-label={dict.setup.removePlayer.replace(
+                                '{index}',
+                                String(index + 1),
+                              )}>
                               <XIcon />
                             </InputGroupButton>
                           </InputGroupAddon>
@@ -177,7 +193,7 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({ dict, l
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => addPlayer({ name: "" })}>
+                onClick={() => addPlayer({ name: '' })}>
                 <Plus />
                 {dict.setup.addPlayer}
               </Button>
