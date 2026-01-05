@@ -52,6 +52,10 @@ const createLocalGameFormSchema = (dict: Dictionary) =>
       },
     );
 
+export type LocalGameFormSchema = z.infer<
+  ReturnType<typeof createLocalGameFormSchema>
+>;
+
 export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
   dict,
   lang,

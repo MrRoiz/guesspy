@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import { ThemeProvider } from './_providers/theme-provider';
+import '../globals.css';
+import { ThemeProvider } from '../_providers/theme-provider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,9 +38,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
   params,
-}: LayoutProps<'/[lang]/game'>) {
+}: LayoutProps<'/[lang]'>) {
+  const { lang } = await params;
   return (
-    <html lang={(await params).lang} suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider

@@ -56,10 +56,10 @@ export const GameTimer: FC<GameTimerProps> = ({
   const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
   const getTimerColor = () => {
-    if (isExpired || isStopped) return "text-destructive";
-    if (timeLeft <= 30) return "text-destructive";
-    if (timeLeft <= 60) return "text-warning";
-    return "text-foreground";
+    if (isExpired || isStopped) return 'text-destructive';
+    if (timeLeft <= 30) return 'text-destructive';
+    if (timeLeft <= 60) return 'text-warning';
+    return 'text-foreground';
   };
 
   const isFinished = isExpired || isStopped;
@@ -72,9 +72,7 @@ export const GameTimer: FC<GameTimerProps> = ({
         <div className="text-center">
           <h2 className="mb-2 font-bold text-2xl">{dict.timer.title}</h2>
           <p className="text-muted-foreground">
-            {isFinished
-              ? dict.timer.timeUpDescription
-              : dict.timer.description}
+            {isFinished ? dict.timer.timeUpDescription : dict.timer.description}
           </p>
         </div>
 
@@ -83,10 +81,11 @@ export const GameTimer: FC<GameTimerProps> = ({
             'flex h-64 w-64 items-center justify-center rounded-full border-4 shadow-lg transition-colors',
             getTimerColor(),
             {
-              "animate-pulse border-destructive": isExpired,
-              "border-destructive": (timeLeft <= 30 && !isFinished) || isStopped,
-              "border-warning": timeLeft > 30 && timeLeft <= 60 && !isFinished,
-              "border-border": timeLeft > 60 && !isFinished,
+              'animate-pulse border-destructive': isExpired,
+              'border-destructive':
+                (timeLeft <= 30 && !isFinished) || isStopped,
+              'border-warning': timeLeft > 30 && timeLeft <= 60 && !isFinished,
+              'border-border': timeLeft > 60 && !isFinished,
             },
           )}>
           <div className="text-center">

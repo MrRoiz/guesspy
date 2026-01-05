@@ -8,7 +8,7 @@ const Page = async ({ params }: PageProps<'/[lang]/game/local/play'>) => {
 
   const dict = await getDictionary(lang);
 
-  return <Game dict={dict} lang={params.lang} />;
+  return <Game dict={dict} lang={lang} />;
 };
 
 export default Page;

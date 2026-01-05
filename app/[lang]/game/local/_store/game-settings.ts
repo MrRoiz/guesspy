@@ -1,8 +1,7 @@
 import { atom } from 'jotai';
-import type z from 'zod';
-import type { localGameFormSchema } from '../setup/_components/form';
+import type { LocalGameFormSchema } from '../setup/_components/form';
 
-export const gameSettingsAtom = atom<z.infer<typeof localGameFormSchema>>({
+export const gameSettingsAtom = atom<LocalGameFormSchema>({
   players: [],
   numberOfSpies: '0',
   randomNumberOfSpies: false,

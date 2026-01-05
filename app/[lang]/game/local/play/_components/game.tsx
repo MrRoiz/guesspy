@@ -1,27 +1,28 @@
 'use client';
 
-import { useAtomValue } from "jotai";
-import { type FC, useCallback, useMemo, useState } from "react";
-import { GameCard } from "@/game/_components/card";
-import { gameSettingsAtom } from "../../_store/game-settings";
-import { GameTimer } from "./timer";
-import { Dictionary } from "@/dictionaries";
-import enWords from "@/word-bank/en.json";
-import esWords from "@/word-bank/es.json";
-import type { Locale } from "@/dictionaries";
+import { useAtomValue } from 'jotai';
+import { type FC, useCallback, useMemo, useState } from 'react';
+import type { Dictionary, Locale } from '@/dictionaries';
+import { GameCard } from '@/game/_components/card';
+import enWords from '@/word-bank/en.json';
+import esWords from '@/word-bank/es.json';
+import { gameSettingsAtom } from '../../_store/game-settings';
+import { GameTimer } from './timer';
 
-
-export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({ dict, lang }) => {
+export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
+  dict,
+  lang,
+}) => {
   const gameSettings = useAtomValue(gameSettingsAtom);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [gameKey, setGameKey] = useState(0);
 
   // Get random word based on language
   const word = useMemo(() => {
-    const words = lang === "es" ? esWords : enWords;
+    const words = lang === 'es' ? esWords : enWords;
     const randomIndex = Math.floor(Math.random() * words.length);
     return words[randomIndex];
-  }, [lang, gameKey]);
+  }, [lang]);
 
   // Generate spy assignments
   // biome-ignore lint/correctness/useExhaustiveDependencies: gameKey is intentionally used to trigger regeneration
