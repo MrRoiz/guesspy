@@ -20,7 +20,9 @@ const Page = async ({ params }: PageProps<'/[lang]/game'>) => {
           {langButtonText}
         </Button>
       </Link>
-      <FuzzyText>Guesspy</FuzzyText>
+      <FuzzyText glitchMode fontSize="clamp(3rem, 8vw, 7rem)">
+        Guesspy
+      </FuzzyText>
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-10">
         <Link className="w-full sm:w-auto" href={`/${lang}/game/local/setup`}>
           <Button className="w-full sm:w-auto">{dict.game.local}</Button>
