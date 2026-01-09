@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { GithubStarsCounter } from '@/components/github-stars-counter';
 import { getDictionary, hasLocale } from '@/dictionaries';
 import FuzzyText from '@/primitives/components/FuzzyText';
-import { GithubStarsCounter } from '@/primitives/components/github-stars-counter';
 import { Button } from '@/primitives/components/ui/button';
 
 const Page = async ({ params }: PageProps<'/[lang]/game'>) => {

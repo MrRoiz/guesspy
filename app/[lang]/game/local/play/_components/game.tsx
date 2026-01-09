@@ -1,8 +1,11 @@
 'use client';
 
-import type { FC } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { type FC, useEffect, useRef } from 'react';
 import type { Dictionary, Locale } from '@/dictionaries';
 import { GameCard } from '@/game/_components/card';
+import { MIN_PLAYERS } from '@/game/_constants';
 import { useGame } from '@/game/local/play/_hooks/use-game';
 import { GameTimer } from './timer';
 
@@ -10,6 +13,8 @@ export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
   dict,
   lang,
 }) => {
+  const isRedirectingRef = useRef(false);
+  const router = useRouter();
   const {
     word,
     playerRoles,
@@ -19,6 +24,27 @@ export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
     currentPlayer,
     currentPlayerIndex,
   } = useGame({ lang });
+
+  useEffect(() => {
+    if (playerRoles.length >= 3) {
+      return;
+    }
+
+    if (isRedirectingRef.current) {
+      return;
+    }
+    isRedirectingRef.current = true;
+    router.push('/');
+  }, [playerRoles, router.push]);
+
+  if (playerRoles.length < MIN_PLAYERS) {
+    return (
+      <div className="flex flex-col items-center gap-5">
+        <h2 className="text-2xl">{dict.app.redirecting}</h2>
+        <LoaderCircle size={100} className="animate-spin text-primary" />
+      </div>
+    );
+  }
 
   // Show timer once all players have checked their cards
   if (allPlayersChecked) {

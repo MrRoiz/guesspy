@@ -1,7 +1,7 @@
 import { Github } from 'lucide-react';
 import Link from 'next/link';
 import type { FC } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/primitives/components/ui/button';
 
 const REPO = 'MrRoiz/guesspy';
 

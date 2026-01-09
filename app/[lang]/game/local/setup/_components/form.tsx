@@ -8,6 +8,8 @@ import type { FC } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import z from 'zod';
 import type { Dictionary } from '@/dictionaries';
+import { MIN_PLAYERS } from '@/game/_constants';
+import { gameSettingsAtom } from '@/game/local/_store/game-settings';
 import { Button } from '@/primitives/components/ui/button';
 import { Checkbox } from '@/primitives/components/ui/checkbox';
 import {
@@ -26,9 +28,6 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@/primitives/components/ui/input-group';
-import { gameSettingsAtom } from '../../_store/game-settings';
-
-const MIN_PLAYERS = 3;
 
 const createLocalGameFormSchema = (dict: Dictionary) =>
   z

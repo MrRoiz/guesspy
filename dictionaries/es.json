@@ -1,7 +1,8 @@
 {
   "app": {
     "githubStars": "Estrellas",
-    "backToHome": "Volver al Inicio"
+    "backToHome": "Volver al Inicio",
+    "redirecting": "Redirigiendo..."
   },
   "game": {
     "local": "Juego Local",
