@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getDictionary, hasLocale } from '@/dictionaries';
 import FuzzyText from '@/primitives/components/FuzzyText';
+import { GithubStarsCounter } from '@/primitives/components/github-stars-counter';
 import { Button } from '@/primitives/components/ui/button';
 
 const Page = async ({ params }: PageProps<'/[lang]/game'>) => {
@@ -16,22 +17,28 @@ const Page = async ({ params }: PageProps<'/[lang]/game'>) => {
   const langButtonText = lang === 'en' ? '¿Español?' : 'English?';
 
   return (
-    <div className="relative flex flex-col gap-4">
+    <>
       <Link href={`/${otherLang}/game`} className="fixed top-4 right-4 z-50">
         <Button variant="outline" size="sm">
           {langButtonText}
         </Button>
       </Link>
-      <FuzzyText glitchMode fontSize="clamp(3rem, 8vw, 7rem)">
-        Guesspy
-      </FuzzyText>
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-10">
-        <Link className="w-full sm:w-auto" href={`/${lang}/game/local/setup`}>
-          <Button className="w-full sm:w-auto">{dict.game.local}</Button>
-        </Link>
-        <Button disabled>{dict.game.room}</Button>
+      <GithubStarsCounter
+        className="fixed top-4 left-4"
+        label={dict.app.githubStars}
+      />
+      <div className="flex flex-col gap-4">
+        <FuzzyText glitchMode fontSize="clamp(3rem, 8vw, 7rem)">
+          Guesspy
+        </FuzzyText>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-10">
+          <Link className="w-full sm:w-auto" href={`/${lang}/game/local/setup`}>
+            <Button className="w-full sm:w-auto">{dict.game.local}</Button>
+          </Link>
+          <Button disabled>{dict.game.room}</Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

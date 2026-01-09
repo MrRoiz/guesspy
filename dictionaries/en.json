@@ -1,4 +1,7 @@
 {
+  "app": {
+    "githubStars": "Stars"
+  },
   "game": {
     "local": "Local Game",
     "room": "Create Room"

@@ -1,4 +1,7 @@
 {
+  "app": {
+    "githubStars": "Estrellas"
+  },
   "game": {
     "local": "Juego Local",
     "room": "Crear Sala"
