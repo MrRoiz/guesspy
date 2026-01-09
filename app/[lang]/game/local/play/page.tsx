@@ -4,7 +4,9 @@ import { Game } from './_components/game';
 
 const Page = async ({ params }: PageProps<'/[lang]/game/local/play'>) => {
   const { lang } = await params;
-  if (!hasLocale(lang)) notFound();
+  if (!hasLocale(lang)) {
+    notFound();
+  }
 
   const dict = await getDictionary(lang);
 

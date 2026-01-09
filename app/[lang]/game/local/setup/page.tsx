@@ -4,7 +4,9 @@ import { LocalUsersForm } from './_components/form';
 
 const Page = async ({ params }: PageProps<'/[lang]/game/local/setup'>) => {
   const { lang } = await params;
-  if (!hasLocale(lang)) notFound();
+  if (!hasLocale(lang)) {
+    notFound();
+  }
 
   const dict = await getDictionary(lang);
 

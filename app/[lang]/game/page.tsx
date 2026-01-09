@@ -6,7 +6,9 @@ import { Button } from '@/primitives/components/ui/button';
 
 const Page = async ({ params }: PageProps<'/[lang]/game'>) => {
   const { lang } = await params;
-  if (!hasLocale(lang)) notFound();
+  if (!hasLocale(lang)) {
+    notFound();
+  }
 
   const dict = await getDictionary(lang);
 

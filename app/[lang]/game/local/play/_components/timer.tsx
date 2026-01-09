@@ -56,9 +56,15 @@ export const GameTimer: FC<GameTimerProps> = ({
   const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
   const getTimerColor = () => {
-    if (isExpired || isStopped) return 'text-destructive';
-    if (timeLeft <= 30) return 'text-destructive';
-    if (timeLeft <= 60) return 'text-warning';
+    if (isExpired || isStopped) {
+      return 'text-destructive';
+    }
+    if (timeLeft <= 30) {
+      return 'text-destructive';
+    }
+    if (timeLeft <= 60) {
+      return 'text-warning';
+    }
     return 'text-foreground';
   };
 

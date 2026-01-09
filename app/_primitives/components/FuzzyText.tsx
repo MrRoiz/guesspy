@@ -58,11 +58,15 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
     let glitchEndTimeoutId: ReturnType<typeof setTimeout>;
     let clickTimeoutId: ReturnType<typeof setTimeout>;
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const init = async () => {
       const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      if (!ctx) {
+        return;
+      }
 
       const computedFontFamily =
         fontFamily === 'inherit'
@@ -89,13 +93,17 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
       } catch {
         await document.fonts.ready;
       }
-      if (isCancelled) return;
+      if (isCancelled) {
+        return;
+      }
 
       const text = React.Children.toArray(children).join('');
 
       const offscreen = document.createElement('canvas');
       const offCtx = offscreen.getContext('2d');
-      if (!offCtx) return;
+      if (!offCtx) {
+        return;
+      }
 
       offCtx.font = fontString;
       offCtx.textBaseline = 'alphabetic';
@@ -176,9 +184,13 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
       const frameDuration = 1000 / fps;
 
       const startGlitchLoop = () => {
-        if (!glitchMode || isCancelled) return;
+        if (!glitchMode || isCancelled) {
+          return;
+        }
         glitchTimeoutId = setTimeout(() => {
-          if (isCancelled) return;
+          if (isCancelled) {
+            return;
+          }
           isGlitching = true;
           glitchEndTimeoutId = setTimeout(() => {
             isGlitching = false;
@@ -187,10 +199,14 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
         }, glitchInterval);
       };
 
-      if (glitchMode) startGlitchLoop();
+      if (glitchMode) {
+        startGlitchLoop();
+      }
 
       const run = (timestamp: number) => {
-        if (isCancelled) return;
+        if (isCancelled) {
+          return;
+        }
 
         if (timestamp - lastFrameTime < frameDuration) {
           animationFrameId = window.requestAnimationFrame(run);
@@ -269,7 +285,9 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
         y <= interactiveBottom;
 
       const handleMouseMove = (e: MouseEvent) => {
-        if (!enableHover) return;
+        if (!enableHover) {
+          return;
+        }
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -281,7 +299,9 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
       };
 
       const handleClick = () => {
-        if (!clickEffect) return;
+        if (!clickEffect) {
+          return;
+        }
         isClicking = true;
         clearTimeout(clickTimeoutId);
         clickTimeoutId = setTimeout(() => {
@@ -290,7 +310,9 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
       };
 
       const handleTouchMove = (e: TouchEvent) => {
-        if (!enableHover) return;
+        if (!enableHover) {
+          return;
+        }
         e.preventDefault();
         const rect = canvas.getBoundingClientRect();
         const touch = e.touches[0];
