@@ -1,6 +1,7 @@
 {
   "app": {
-    "githubStars": "Stars"
+    "githubStars": "Stars",
+    "backToHome": "Back to Home"
   },
   "game": {
     "local": "Local Game",

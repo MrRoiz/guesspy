@@ -1,6 +1,7 @@
 {
   "app": {
-    "githubStars": "Estrellas"
+    "githubStars": "Estrellas",
+    "backToHome": "Volver al Inicio"
   },
   "game": {
     "local": "Juego Local",

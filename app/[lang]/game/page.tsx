@@ -18,13 +18,13 @@ const Page = async ({ params }: PageProps<'/[lang]/game'>) => {
 
   return (
     <>
-      <Link href={`/${otherLang}/game`} className="fixed top-4 right-4 z-50">
+      <Link href={`/${otherLang}/game`} className="absolute top-4 right-4 z-50">
         <Button variant="outline" size="sm">
           {langButtonText}
         </Button>
       </Link>
       <GithubStarsCounter
-        className="fixed top-4 left-4"
+        className="absolute top-4 left-4"
         label={dict.app.githubStars}
       />
       <div className="flex flex-col gap-4">
