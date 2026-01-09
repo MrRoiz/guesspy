@@ -1,68 +1,36 @@
 'use client';
 
-import { useAtomValue } from 'jotai';
-import { type FC, useCallback, useMemo, useState } from 'react';
+import type { FC } from 'react';
 import type { Dictionary, Locale } from '@/dictionaries';
 import { GameCard } from '@/game/_components/card';
-import enWords from '@/word-bank/en.json';
-import esWords from '@/word-bank/es.json';
-import { gameSettingsAtom } from '../../_store/game-settings';
+import { useGame } from '@/game/local/play/_hooks/use-game';
 import { GameTimer } from './timer';
 
 export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
   dict,
   lang,
 }) => {
-  const gameSettings = useAtomValue(gameSettingsAtom);
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-  const [gameKey, setGameKey] = useState(0);
-
-  // Get random word based on language
-  const word = useMemo(() => {
-    const words = lang === 'es' ? esWords : enWords;
-    const randomIndex = Math.floor(Math.random() * words.length);
-    return words[randomIndex];
-  }, [lang]);
-
-  // Generate spy assignments
-  // biome-ignore lint/correctness/useExhaustiveDependencies: gameKey is intentionally used to trigger regeneration
-  const playerRoles = useMemo(() => {
-    const players = gameSettings.players.map((p) => p.name);
-    const spyCount = gameSettings.randomNumberOfSpies
-      ? Math.floor(Math.random() * players.length) + 1
-      : Number(gameSettings.numberOfSpies);
-
-    // Create an array with spy indices
-    const spyIndices = new Set<number>();
-    while (spyIndices.size < spyCount && spyIndices.size < players.length) {
-      spyIndices.add(Math.floor(Math.random() * players.length));
-    }
-
-    return players.map((name, index) => ({
-      name,
-      isSpy: spyIndices.has(index),
-    }));
-  }, [gameSettings, gameKey]);
-
-  const handlePlayAgain = useCallback(() => {
-    setCurrentPlayerIndex(0);
-    setGameKey((prev) => prev + 1);
-  }, []);
-
-  const allPlayersChecked = currentPlayerIndex >= playerRoles.length;
+  const {
+    word,
+    playerRoles,
+    playAgain,
+    nextPlayer,
+    allPlayersChecked,
+    currentPlayer,
+    currentPlayerIndex,
+  } = useGame({ lang });
 
   // Show timer once all players have checked their cards
   if (allPlayersChecked) {
     return (
       <GameTimer
         playerRoles={playerRoles}
-        onPlayAgain={handlePlayAgain}
+        onPlayAgain={playAgain}
         dict={dict}
       />
     );
   }
 
-  const currentPlayer = playerRoles[currentPlayerIndex];
   if (!currentPlayer) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -86,7 +54,7 @@ export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
         player={currentPlayer}
         word={word}
         dict={dict}
-        onFinishCheck={() => setCurrentPlayerIndex(currentPlayerIndex + 1)}
+        onFinishCheck={nextPlayer}
       />
     </div>
   );

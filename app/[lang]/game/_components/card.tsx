@@ -5,7 +5,7 @@ import { Button } from '@/primitives/components/ui/button';
 
 const transitionClass = 'duration-700';
 // biome-ignore lint/style/noNonNullAssertion: Trust me bro
-const changeOnMs = Number(transitionClass.split('-')[1]!) / 3;
+const changeOnMs = Number(transitionClass.split('-')[1]!) / 2;
 
 export const GameCard: FC<{
   player: { name: string; isSpy: boolean };
