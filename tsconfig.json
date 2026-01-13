@@ -19,6 +19,7 @@
       }
     ],
     "paths": {
+      "@/*": ["./app/*"],
       "@/lib/*": ["./app/_lib/*"],
       "@/game/*": ["./app/[lang]/game/*"],
       "@/providers/*": ["./app/_providers/*"],
