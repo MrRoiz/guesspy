@@ -11,6 +11,9 @@
     "format": "biome format --write",
     "prepare": "husky"
   },
+  "engines": {
+    "node": "22"
+  },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.7.3",
     "@hookform/resolvers": "^5.2.2",

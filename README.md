@@ -1,8 +1,8 @@
-# 🕵️ Guesspy
+# Guesspy
 
-A social deduction party game built with Next.js where players try to identify the spy (or spies) among them Guesspy provides a fun, interactive experience for groups of friends.
+A social deduction party game built with Next.js where players try to identify the spy (or spies) among them. Guesspy provides a fun, interactive experience for groups of friends.
 
-## 🎮 How to Play
+## How to Play
 
 1. **Setup**: Gather at least 3 players (the more, the merrier!)
 2. **Configure**: Enter player names and set the number of spies
@@ -15,16 +15,16 @@ A social deduction party game built with Next.js where players try to identify t
 - **Local Game**: Play in person by passing a single device around
 - **Create Room** *(Coming Soon)*: Play remotely with friends online
 
-## ✨ Features
+## Features
 
-- 🎲 Configurable number of spies (fixed or random)
-- ⏱️ 2-minute discussion timer with visual countdown
-- 🎨 Modern, clean UI with dark mode support
-- 📱 Responsive design - works on desktop and mobile
-- 🔒 Secret role assignment for each player
-- 🎭 Card reveal animations for that extra suspense
+- Configurable number of spies (fixed or random)
+- 2-minute discussion timer with visual countdown
+- Modern, clean UI with dark mode support
+- Responsive design - works on desktop and mobile
+- Secret role assignment for each player
+- Card reveal animations for that extra suspense
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Installation
 
@@ -36,19 +36,19 @@ cd guesspy
 
 2. Install dependencies:
 ```bash
-yarn install
+pnpm install
 ```
 
 3. Run the development server:
 ```bash
-yarn dev
+pnpm dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) with App Router and Turbopack
+- **Framework**: [Next.js 16](https://nextjs.org/) with App Router and Turbopack
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
 - **UI Components**: Radix UI primitives
@@ -57,24 +57,7 @@ yarn dev
 - **Icons**: Lucide React
 - **Code Quality**: Biome (linting & formatting)
 
-## 🏗️ Project Structure
-
-```
-guesspy/
-├── app/
-│   ├── game/
-│   │   ├── local/
-│   │   │   ├── setup/        # Player setup page
-│   │   │   ├── play/         # Game play page with timer
-│   │   │   └── _store/       # Game state management
-│   │   └── _components/      # Shared game components
-│   ├── _primitives/          # UI primitives and components
-│   └── _lib/                 # Utility functions
-├── public/                   # Static assets
-└── package.json
-```
-
-## 🎯 Game Rules
+## Game Rules
 
 ### Minimum Players
 At least **3 players** are required to start a game.
@@ -82,7 +65,7 @@ At least **3 players** are required to start a game.
 ### Number of Spies
 - Choose a fixed number of spies
 - Or enable "Random number of spies" for unpredictable fun!
-  - ⚠️ Warning: With random mode, sometimes everyone might be a spy!
+  - Note: With random mode, sometimes everyone might be a spy!
 
 ### Discussion Time
 Players have **2 minutes** to:
@@ -91,7 +74,7 @@ Players have **2 minutes** to:
 - Build alliances
 - Identify the spy
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to:
 - Report bugs
@@ -100,4 +83,4 @@ Contributions are welcome! Feel free to:
 
 ---
 
-**Have fun playing Guesspy! 🎉**
+**Have fun playing Guesspy!**
