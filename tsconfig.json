@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@/*": ["./app/*"],
+      "@/env/*": ["./app/config/env/*"],
       "@/lib/*": ["./app/_lib/*"],
       "@/game/*": ["./app/[lang]/game/*"],
       "@/providers/*": ["./app/_providers/*"],
