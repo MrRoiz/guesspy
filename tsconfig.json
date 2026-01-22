@@ -20,14 +20,15 @@
     ],
     "paths": {
       "@/*": ["./app/*"],
-      "@/env/*": ["./app/config/env/*"],
+      "@/env/*": ["./app/_config/env/*"],
       "@/lib/*": ["./app/_lib/*"],
       "@/game/*": ["./app/[lang]/game/*"],
       "@/providers/*": ["./app/_providers/*"],
       "@/primitives/*": ["./app/_primitives/*"],
       "@/components/*": ["./app/_components/*"],
       "@/dictionaries": ["./app/[lang]/dictionaries.ts"],
-      "@/word-bank/*": ["./word-bank/*"]
+      "@/word-bank/*": ["./word-bank/*"],
+      "@/rpc/*": ["./app/rpc/*"]
     }
   },
   "include": [
