@@ -17,6 +17,10 @@ function getLocale(request) {
 export function proxy(request) {
   const { pathname } = request.nextUrl;
 
+  if (pathname.includes('/rpc')) {
+    return NextResponse.next();
+  }
+
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );

@@ -4,8 +4,7 @@ import { useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import type { Locale } from '@/dictionaries';
 import { gameSettingsAtom } from '@/game/local/_store/game-settings';
-import enWords from '@/word-bank/en.json';
-import esWords from '@/word-bank/es.json';
+import { useGetRandomWord } from './use-get-random-word';
 
 type Player = {
   name: string;
@@ -13,7 +12,10 @@ type Player = {
 };
 
 type UseGame = (payload: { lang: Locale }) => {
-  word: string;
+  word: string | undefined;
+  isPending: boolean;
+  isError: boolean;
+
   playerRoles: Player[];
   currentPlayer: Player;
   currentPlayerIndex: number;
@@ -24,17 +26,13 @@ type UseGame = (payload: { lang: Locale }) => {
 
 export const useGame: UseGame = ({ lang }) => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+  const {
+    invalidate,
+    query: { data, isPending, isError },
+  } = useGetRandomWord(lang);
 
   const [gameKey, setGameKey] = useState(0);
   const gameSettings = useAtomValue(gameSettingsAtom);
-
-  // Get random word based on language
-  // biome-ignore lint/correctness/useExhaustiveDependencies: gameKey is intentionally used to trigger regeneration
-  const word = useMemo(() => {
-    const words = lang === 'es' ? esWords : enWords;
-    const randomIndex = Math.floor(Math.random() * words.length);
-    return words[randomIndex];
-  }, [lang, gameKey]);
 
   // Generate spy assignments
   // biome-ignore lint/correctness/useExhaustiveDependencies: gameKey is intentionally used to trigger regeneration
@@ -61,16 +59,20 @@ export const useGame: UseGame = ({ lang }) => {
   }, [gameSettings, gameKey]);
 
   const playAgain = useCallback(() => {
+    invalidate();
     setCurrentPlayerIndex(0);
     setGameKey((prev) => prev + 1);
-  }, []);
+  }, [invalidate]);
 
   const nextPlayer = () => {
     setCurrentPlayerIndex((prev) => prev + 1);
   };
 
   return {
-    word,
+    word: typeof data === 'string' ? data : undefined,
+    isPending,
+    isError,
+
     playerRoles,
     allPlayersChecked: currentPlayerIndex >= playerRoles.length,
     currentPlayer: playerRoles[currentPlayerIndex],

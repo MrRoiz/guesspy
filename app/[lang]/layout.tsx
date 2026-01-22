@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '@/globals.css';
+import { TanstackQueryProvider } from '@/_providers/tanstack-query';
 import { ThemeProvider } from '@/providers/theme-provider';
 
 const geistSans = Geist({
@@ -49,7 +50,7 @@ export default async function RootLayout({
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange>
-          {children}
+          <TanstackQueryProvider>{children}</TanstackQueryProvider>
         </ThemeProvider>
         <Analytics />
       </body>

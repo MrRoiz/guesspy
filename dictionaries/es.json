@@ -6,7 +6,9 @@
   },
   "game": {
     "local": "Juego Local",
-    "room": "Crear Sala (Muy Pronto)"
+    "room": "Crear Sala (Muy Pronto)",
+    "retrievingWord": "Buscando palabra...",
+    "errorRetrievingWord": "Algo salio mal buscando la palabra. Intenta recargando la página."
   },
   "setup": {
     "title": "Configuración del Juego",

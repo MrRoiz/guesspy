@@ -17,6 +17,9 @@ export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
   const router = useRouter();
   const {
     word,
+    isError,
+    isPending,
+
     playerRoles,
     playAgain,
     nextPlayer,
@@ -44,6 +47,19 @@ export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
         <LoaderCircle size={100} className="animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (isPending) {
+    return (
+      <div className="flex flex-col items-center gap-5">
+        <h2 className="text-2xl">{dict.game.retrievingWord}</h2>
+        <LoaderCircle size={100} className="animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (isError || !word) {
+    return <h2 className="text-2xl">{dict.game.errorRetrievingWord}</h2>;
   }
 
   // Show timer once all players have checked their cards

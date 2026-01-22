@@ -6,7 +6,9 @@
   },
   "game": {
     "local": "Local Game",
-    "room": "Create Room (Coming Soon)"
+    "room": "Create Room (Coming Soon)",
+    "retrievingWord": "Searching for word...",
+    "errorRetrievingWord": "Something went wrong retrieving the word. Try reloading the page"
   },
   "setup": {
     "title": "Game Settings",

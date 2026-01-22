@@ -1,0 +1,1 @@
+ALTER TABLE "word" RENAME TO "Word";
