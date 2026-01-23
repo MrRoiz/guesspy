@@ -13,7 +13,7 @@ type Player = {
 
 type UseGame = (payload: { lang: Locale }) => {
   word: string | undefined;
-  isPending: boolean;
+  isFetching: boolean;
   isError: boolean;
 
   playerRoles: Player[];
@@ -28,7 +28,7 @@ export const useGame: UseGame = ({ lang }) => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const {
     invalidate,
-    query: { data, isPending, isError },
+    query: { data, isFetching, isError },
   } = useGetRandomWord(lang);
 
   const [gameKey, setGameKey] = useState(0);
@@ -70,7 +70,7 @@ export const useGame: UseGame = ({ lang }) => {
 
   return {
     word: typeof data === 'string' ? data : undefined,
-    isPending,
+    isFetching,
     isError,
 
     playerRoles,

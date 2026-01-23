@@ -18,7 +18,7 @@ export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
   const {
     word,
     isError,
-    isPending,
+    isFetching,
 
     playerRoles,
     playAgain,
@@ -49,7 +49,7 @@ export const Game: FC<{ dict: Dictionary; lang: Locale }> = ({
     );
   }
 
-  if (isPending) {
+  if (isFetching) {
     return (
       <div className="flex flex-col items-center gap-5">
         <h2 className="text-2xl">{dict.game.retrievingWord}</h2>
