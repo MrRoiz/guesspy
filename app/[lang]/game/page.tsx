@@ -35,7 +35,9 @@ const Page = async ({ params }: PageProps<'/[lang]/game'>) => {
           <Link className="w-full sm:w-auto" href={`/${lang}/game/local/setup`}>
             <Button className="w-full sm:w-auto">{dict.game.local}</Button>
           </Link>
-          <Button disabled>{dict.game.room}</Button>
+          <Link className="w-full sm:w-auto" href={`/${lang}/game/room`}>
+            <Button>{dict.game.room}</Button>
+          </Link>
         </div>
       </div>
     </>

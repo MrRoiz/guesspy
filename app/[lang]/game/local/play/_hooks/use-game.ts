@@ -3,7 +3,7 @@
 import { useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import type { Locale } from '@/dictionaries';
-import { gameSettingsAtom } from '@/game/local/_store/game-settings';
+import { gameSettingsAtom } from '@/game/_store/game-settings';
 import { useGetRandomWord } from './use-get-random-word';
 
 type Player = {

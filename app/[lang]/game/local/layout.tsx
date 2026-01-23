@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import type { FC } from 'react';
 import { getDictionary, hasLocale } from '@/dictionaries';
 import { Button } from '@/primitives/components/ui/button';
-import { StoreProvider } from '@/providers/store';
 
 const Layout: FC<LayoutProps<'/[lang]/game/local'>> = async ({
   children,
@@ -22,7 +21,7 @@ const Layout: FC<LayoutProps<'/[lang]/game/local'>> = async ({
         <Button variant="outline">{dict.app.backToHome}</Button>
       </Link>
 
-      <StoreProvider>{children}</StoreProvider>
+      {children}
     </>
   );
 };

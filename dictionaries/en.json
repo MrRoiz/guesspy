@@ -6,7 +6,7 @@
   },
   "game": {
     "local": "Local Game",
-    "room": "Create Room (Coming Soon)",
+    "room": "Create Room",
     "retrievingWord": "Searching for word...",
     "errorRetrievingWord": "Something went wrong retrieving the word. Try reloading the page"
   },
