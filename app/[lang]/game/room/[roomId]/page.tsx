@@ -13,7 +13,11 @@ const Page: FC<PageProps<'/[lang]/game/room/[roomId]'>> = async ({
 
   const dict = await getDictionary(lang);
 
-  return <Lobby dict={dict} lang={lang} roomId={roomId} />;
+  return (
+    <div className="flex justify-center">
+      <Lobby dict={dict} lang={lang} roomId={roomId} />
+    </div>
+  );
 };
 
 export default Page;

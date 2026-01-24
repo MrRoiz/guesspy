@@ -10,16 +10,18 @@ import {
   FieldLabel,
 } from '@/_primitives/components/ui/field';
 import { Input } from '@/_primitives/components/ui/input';
+import type { Dictionary } from '@/dictionaries';
 
 const formSchema = z.object({
   name: z.string().trim().nonempty('Name is required'),
 });
 
 type Props = {
+  dict: Dictionary;
   onSubmit: (data: z.infer<typeof formSchema>) => void;
 };
 
-export const PlayerForm: FC<Props> = ({ onSubmit }) => {
+export const PlayerForm: FC<Props> = ({ dict, onSubmit }) => {
   const form = useForm({
     defaultValues: {
       name: '',
@@ -28,22 +30,20 @@ export const PlayerForm: FC<Props> = ({ onSubmit }) => {
   });
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form className="max-w-[1000px]" onSubmit={form.handleSubmit(onSubmit)}>
       <Controller
         name="name"
         control={form.control}
         render={({ field, fieldState }) => (
           <Field>
-            <FieldLabel>Name</FieldLabel>
+            <FieldLabel>{dict.room.enterName}</FieldLabel>
             <Input {...field} aria-invalid={fieldState.invalid} />
-            <FieldDescription>
-              The name you want to use in the room
-            </FieldDescription>
+            <FieldDescription>{dict.room.nameDescription}</FieldDescription>
             <FieldError />
           </Field>
         )}
       />
-      <Button className="mt-4 w-full">Join!</Button>
+      <Button className="mt-4 w-full">{dict.room.joinRoom}</Button>
     </form>
   );
 };

@@ -44,6 +44,25 @@
     "playAgain": "Jugar de Nuevo",
     "stopTimer": "Detener el reloj"
   },
+  "room": {
+    "players": "Jugadores",
+    "waitingForPlayers": "Esperando jugadores",
+    "you": "tú",
+    "needMorePlayers": "Necesitas {count} jugador(es) más para empezar",
+    "hostControls": "Controles del Anfitrión",
+    "waitingForMorePlayers": "Esperando que se unan más jugadores...",
+    "waitingForHostToStart": "Esperando que el anfitrión inicie el juego...",
+    "startGame": "Iniciar Juego",
+    "yourCard": "Tu Carta",
+    "allPlayersReady": "¡Todos los Jugadores Listos!",
+    "startingDiscussion": "Iniciando fase de discusión...",
+    "playersStatus": "Estado de los Jugadores",
+    "waitingForHostToRestart": "Esperando que el anfitrión inicie un nuevo juego...",
+    "waitingForOthers": "Esperando que otros jugadores vean sus cartas...",
+    "joinRoom": "Unirse a la Sala",
+    "enterName": "Ingresa tu nombre",
+    "nameDescription": "El nombre que quieres usar en la sala"
+  },
   "errors": {
     "playerNameRequired": "El nombre del jugador es obligatorio",
     "morePlayersThanSpies": "Debe haber más jugadores que espías"

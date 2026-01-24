@@ -44,6 +44,25 @@
     "playAgain": "Play Again",
     "stopTimer": "Stop the timer"
   },
+  "room": {
+    "players": "Players",
+    "waitingForPlayers": "Waiting for players",
+    "you": "you",
+    "needMorePlayers": "Need {count} more player(s) to start",
+    "hostControls": "Host Controls",
+    "waitingForMorePlayers": "Waiting for more players to join...",
+    "waitingForHostToStart": "Waiting for the host to start the game...",
+    "startGame": "Start Game",
+    "yourCard": "Your Card",
+    "allPlayersReady": "All Players Ready!",
+    "startingDiscussion": "Starting discussion phase...",
+    "playersStatus": "Players Status",
+    "waitingForHostToRestart": "Waiting for host to start a new game...",
+    "waitingForOthers": "Waiting for other players to check their cards...",
+    "joinRoom": "Join Room",
+    "enterName": "Enter your name",
+    "nameDescription": "The name you want to use in the room"
+  },
   "errors": {
     "playerNameRequired": "Player name is required",
     "morePlayersThanSpies": "There should be more players than spies"
