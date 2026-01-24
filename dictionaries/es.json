@@ -6,7 +6,7 @@
   },
   "game": {
     "local": "Juego Local",
-    "room": "Crear Sala",
+    "room": "Crear Sala (Beta)",
     "retrievingWord": "Buscando palabra...",
     "errorRetrievingWord": "Algo salio mal buscando la palabra. Intenta recargando la página."
   },
