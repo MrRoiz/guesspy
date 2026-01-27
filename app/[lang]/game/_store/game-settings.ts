@@ -1,8 +1,11 @@
-import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 import type { LocalGameFormSchema } from '@/game/local/setup/_components/form';
 
-export const gameSettingsAtom = atom<LocalGameFormSchema>({
-  players: [],
-  numberOfSpies: '0',
-  randomNumberOfSpies: false,
-});
+export const gameSettingsAtom = atomWithStorage<LocalGameFormSchema>(
+  'gameSettings',
+  {
+    players: [],
+    numberOfSpies: '1',
+    randomNumberOfSpies: false,
+  },
+);

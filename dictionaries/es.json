@@ -21,7 +21,8 @@
     "playerPlaceholder": "Jugador #{index}",
     "removePlayer": "Eliminar jugador {index}",
     "addPlayer": "Añadir Jugador",
-    "play": "¡Jugar!"
+    "play": "¡Jugar!",
+    "clear": "Limpiar"
   },
   "play": {
     "playerProgress": "Jugador {current} de {total}",

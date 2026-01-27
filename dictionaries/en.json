@@ -21,7 +21,8 @@
     "playerPlaceholder": "Player #{index}",
     "removePlayer": "Remove player {index}",
     "addPlayer": "Add Player",
-    "play": "Play!"
+    "play": "Play!",
+    "clear": "Clear"
   },
   "play": {
     "playerProgress": "Player {current} of {total}",
