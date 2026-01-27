@@ -1,10 +1,10 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { Plus, XIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import type { FC } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import z from 'zod';
 import type { Dictionary } from '@/dictionaries';
@@ -28,6 +28,12 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@/primitives/components/ui/input-group';
+
+const defaultValues = {
+  players: Array.from({ length: MIN_PLAYERS }).map(() => ({ name: '' })),
+  numberOfSpies: '1',
+  randomNumberOfSpies: false,
+};
 
 const createLocalGameFormSchema = (dict: Dictionary) =>
   z
@@ -59,15 +65,39 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
   dict,
   lang,
 }) => {
+  const [gameSettings, setGameSettings] = useAtom(gameSettingsAtom);
   const localGameFormSchema = createLocalGameFormSchema(dict);
+  const hasHydrated = useRef(false);
+
   const form = useForm<z.infer<typeof localGameFormSchema>>({
-    defaultValues: {
-      players: Array.from({ length: MIN_PLAYERS }).map(() => ({ name: '' })),
-      numberOfSpies: '1',
-      randomNumberOfSpies: false,
-    },
+    defaultValues,
     resolver: zodResolver(localGameFormSchema),
   });
+
+  useEffect(() => {
+    const { unsubscribe } = form.watch((value) => {
+      const result = localGameFormSchema.safeParse(value);
+      if (form.formState.isDirty && result.success) {
+        setGameSettings(result.data);
+      }
+    });
+    return () => unsubscribe();
+  }, [
+    form.watch,
+    form.formState.isDirty,
+    localGameFormSchema,
+    setGameSettings,
+  ]);
+
+  useEffect(() => {
+    if (hasHydrated.current) {
+      return;
+    }
+    if (gameSettings.players.length >= MIN_PLAYERS) {
+      hasHydrated.current = true;
+      form.reset(gameSettings);
+    }
+  }, [gameSettings, form.reset]);
 
   const {
     fields: players,
@@ -77,8 +107,6 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
     control: form.control,
     name: 'players',
   });
-
-  const setGameSettings = useSetAtom(gameSettingsAtom);
   const router = useRouter();
 
   const randomNumberOfSpies = form.watch('randomNumberOfSpies');
@@ -199,6 +227,18 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
                 onClick={() => addPlayer({ name: '' })}>
                 <Plus />
                 {dict.setup.addPlayer}
+              </Button>
+            </div>
+            <div className="flex gap-2 *:flex-1">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => {
+                  form.reset(defaultValues);
+                  setGameSettings(defaultValues);
+                }}>
+                <XIcon />
+                {dict.setup.clear}
               </Button>
               <Button>{dict.setup.play}</Button>
             </div>
