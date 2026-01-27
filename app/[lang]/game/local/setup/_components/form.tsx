@@ -76,18 +76,12 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
 
   useEffect(() => {
     const { unsubscribe } = form.watch((value) => {
-      const result = localGameFormSchema.safeParse(value);
-      if (form.formState.isDirty && result.success) {
-        setGameSettings(result.data);
+      if (form.formState.isDirty) {
+        setGameSettings(value);
       }
     });
     return () => unsubscribe();
-  }, [
-    form.watch,
-    form.formState.isDirty,
-    localGameFormSchema,
-    setGameSettings,
-  ]);
+  }, [form.watch, form.formState.isDirty, setGameSettings]);
 
   useEffect(() => {
     if (hasHydrated.current) {
