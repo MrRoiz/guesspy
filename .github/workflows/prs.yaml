@@ -11,18 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: "Setup node"
+        uses: actions/setup-node@v6
         with:
-          fetch-depth: 0
-      - name: "Setup yarn"
-        uses: actions/setup-node@v4
+          node-version: "24"
+      - name: "Setup pnpm"
+        uses: pnpm/action-setup@v4
         with:
-          node-version: "22"
-          cache: "yarn"
+          version: "10"
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Biome check
-        run: yarn lint
+        run: pnpm lint
       - name: Generate Next types
-        run: yarn next typegen
+        run: pnpm next typegen
       - name: Typescript check
-        run: yarn type-check
+        run: pnpm type-check

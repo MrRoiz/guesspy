@@ -14,7 +14,8 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "engines": {
-    "node": "22"
+    "node": "24",
+    "packageManager": "pnpm"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.7.3",
