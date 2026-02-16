@@ -31,6 +31,8 @@ export const Lobby: FC<{
     readyPlayers,
     stopTimer,
     isTimerStopped,
+    showSpies,
+    toggleSpies,
   } = useRoom({ roomId });
 
   if (!player) {
@@ -60,6 +62,8 @@ export const Lobby: FC<{
         isHost={isHost}
         onStopTimer={stopTimer}
         isTimerStopped={isTimerStopped}
+        showSpies={showSpies}
+        onToggleSpies={toggleSpies}
       />
     );
   }

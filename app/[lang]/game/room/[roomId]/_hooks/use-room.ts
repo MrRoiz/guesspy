@@ -33,6 +33,10 @@ const playerReadyEvent = z.object({
   playerId: z.string(),
 });
 
+const spiesRevealedEvent = z.object({
+  show: z.boolean(),
+});
+
 type UseRoom = (params: { roomId: string }) => {
   setPlayer: (name: string) => void;
   player: string | undefined;
@@ -49,6 +53,8 @@ type UseRoom = (params: { roomId: string }) => {
   isTimerStopped: boolean;
   allPlayersChecked: boolean;
   readyPlayers: Set<string>;
+  showSpies: boolean;
+  toggleSpies: () => void;
 };
 
 export const useRoom: UseRoom = ({ roomId }) => {
@@ -61,6 +67,7 @@ export const useRoom: UseRoom = ({ roomId }) => {
   const [spyIds, setSpyIds] = useState<string[]>([]);
   const [readyPlayers, setReadyPlayers] = useState<Set<string>>(new Set());
   const [isTimerStopped, setIsTimerStopped] = useState(false);
+  const [showSpies, setShowSpies] = useState(false);
   const joinedAtRef = useRef<number>(0);
 
   // Derive host from players - the player who joined first is the host
@@ -158,6 +165,7 @@ export const useRoom: UseRoom = ({ roomId }) => {
         setGamePhase('playing');
         setReadyPlayers(new Set());
         setIsTimerStopped(false);
+        setShowSpies(false);
       })
       .on('broadcast', { event: 'play_again' }, () => {
         setWord(undefined);
@@ -165,6 +173,7 @@ export const useRoom: UseRoom = ({ roomId }) => {
         setGamePhase('lobby');
         setReadyPlayers(new Set());
         setIsTimerStopped(false);
+        setShowSpies(false);
       })
       .on('broadcast', { event: 'all_players_ready' }, () => {
         setGamePhase('timer');
@@ -184,6 +193,13 @@ export const useRoom: UseRoom = ({ roomId }) => {
       })
       .on('broadcast', { event: 'timer_stopped' }, () => {
         setIsTimerStopped(true);
+      })
+      .on('broadcast', { event: 'spies_revealed' }, ({ payload }) => {
+        const parsed = spiesRevealedEvent.safeParse(payload);
+        if (!parsed.success) {
+          return;
+        }
+        setShowSpies(parsed.data.show);
       })
       .subscribe(async (status) => {
         if (status !== 'SUBSCRIBED') {
@@ -234,6 +250,8 @@ export const useRoom: UseRoom = ({ roomId }) => {
       setSpyIds(selectedSpyIds);
       setGamePhase('playing');
       setReadyPlayers(new Set());
+      setIsTimerStopped(false);
+      setShowSpies(false);
     },
     [isHost, players],
   );
@@ -253,6 +271,8 @@ export const useRoom: UseRoom = ({ roomId }) => {
     setSpyIds([]);
     setGamePhase('lobby');
     setReadyPlayers(new Set());
+    setIsTimerStopped(false);
+    setShowSpies(false);
   }, [isHost]);
 
   const markPlayerReady = useCallback(() => {
@@ -278,6 +298,10 @@ export const useRoom: UseRoom = ({ roomId }) => {
   }, [playerId]);
 
   const stopTimer = useCallback(() => {
+    if (!isHost) {
+      return;
+    }
+
     // Broadcast that the timer was stopped
     channel.current.send({
       type: 'broadcast',
@@ -286,7 +310,27 @@ export const useRoom: UseRoom = ({ roomId }) => {
 
     // Also update local state immediately
     setIsTimerStopped(true);
-  }, []);
+  }, [isHost]);
+
+  const toggleSpies = useCallback(() => {
+    if (!isHost) {
+      return;
+    }
+
+    const newShowSpies = !showSpies;
+
+    // Broadcast the new show spies state
+    channel.current.send({
+      type: 'broadcast',
+      event: 'spies_revealed',
+      payload: {
+        show: newShowSpies,
+      },
+    });
+
+    // Also update local state immediately
+    setShowSpies(newShowSpies);
+  }, [isHost, showSpies]);
 
   return {
     setPlayer,
@@ -304,5 +348,7 @@ export const useRoom: UseRoom = ({ roomId }) => {
     isTimerStopped,
     allPlayersChecked,
     readyPlayers,
+    showSpies,
+    toggleSpies,
   };
 };

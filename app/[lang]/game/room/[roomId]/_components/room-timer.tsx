@@ -21,6 +21,8 @@ type RoomTimerProps = {
   isHost: boolean;
   onStopTimer: () => void;
   isTimerStopped: boolean;
+  showSpies: boolean;
+  onToggleSpies: () => void;
 };
 
 export const RoomTimer: FC<RoomTimerProps> = ({
@@ -30,10 +32,11 @@ export const RoomTimer: FC<RoomTimerProps> = ({
   isHost,
   onStopTimer,
   isTimerStopped,
+  showSpies,
+  onToggleSpies,
 }) => {
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const [isExpired, setIsExpired] = useState(false);
-  const [showSpies, setShowSpies] = useState(false);
 
   useEffect(() => {
     if (isTimerStopped) {
@@ -113,7 +116,7 @@ export const RoomTimer: FC<RoomTimerProps> = ({
           </div>
         </div>
 
-        {!isFinished && (
+        {!isFinished && isHost && (
           <Button variant="outline" onClick={onStopTimer}>
             {dict.timer.stopTimer}
           </Button>
@@ -136,9 +139,11 @@ export const RoomTimer: FC<RoomTimerProps> = ({
           )}
 
           <div className="flex flex-col gap-4 sm:flex-row">
-            <Button variant="outline" onClick={() => setShowSpies(!showSpies)}>
-              {showSpies ? dict.timer.hideSpies : dict.timer.revealSpies}
-            </Button>
+            {isHost && (
+              <Button variant="outline" onClick={onToggleSpies}>
+                {showSpies ? dict.timer.hideSpies : dict.timer.revealSpies}
+              </Button>
+            )}
             {isHost && (
               <Button onClick={onPlayAgain}>{dict.timer.playAgain}</Button>
             )}
