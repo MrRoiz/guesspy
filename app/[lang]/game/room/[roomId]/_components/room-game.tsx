@@ -1,5 +1,3 @@
-'use client';
-
 import { CheckCircle, LoaderCircle } from 'lucide-react';
 import type { FC } from 'react';
 import type { Dictionary } from '@/dictionaries';

@@ -1,9 +1,6 @@
-'use client';
-
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 import { LoaderCircle } from 'lucide-react';
 import type { FC } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { Button } from '@/_primitives/components/ui/button';
 import { Checkbox } from '@/_primitives/components/ui/checkbox';
@@ -21,8 +18,6 @@ const formSchema = z.object({
   numberOfSpies: z.string().min(1, 'Required'),
   randomNumberOfSpies: z.boolean(),
 });
-
-type FormValues = z.infer<typeof formSchema>;
 
 type StartGameFormProps = {
   dict: Dictionary;
@@ -44,35 +39,37 @@ export const StartGameForm: FC<StartGameFormProps> = ({
     invalidate,
   } = useGetRandomWord(lang);
 
-  const form = useForm<FormValues>({
+  const form = useForm({
     defaultValues: {
       numberOfSpies: '1',
       randomNumberOfSpies: false,
     },
-    resolver: zodResolver(formSchema),
+    validators: {
+      onChange: formSchema,
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await invalidate();
+
+      if (!word || typeof word !== 'string') {
+        return;
+      }
+
+      let numberOfSpies: number;
+      if (value.randomNumberOfSpies) {
+        numberOfSpies = Math.floor(Math.random() * maxSpies) + 1;
+      } else {
+        numberOfSpies = Math.min(Number(value.numberOfSpies), maxSpies);
+      }
+
+      onStartGame(word, numberOfSpies);
+    },
   });
 
-  const watchRandomSpies = form.watch('randomNumberOfSpies');
-
-  const handleSubmit = async (data: FormValues) => {
-    // Get a fresh word
-    await invalidate();
-
-    // Wait a bit for the new word to be fetched
-    // In a real app, you might want to handle this more elegantly
-    if (!word || typeof word !== 'string') {
-      return;
-    }
-
-    let numberOfSpies: number;
-    if (data.randomNumberOfSpies) {
-      numberOfSpies = Math.floor(Math.random() * maxSpies) + 1;
-    } else {
-      numberOfSpies = Math.min(Number(data.numberOfSpies), maxSpies);
-    }
-
-    onStartGame(word, numberOfSpies);
-  };
+  const watchRandomSpies = useStore(
+    form.store,
+    (state) => state.values.randomNumberOfSpies,
+  );
 
   if (isError) {
     return (
@@ -85,49 +82,62 @@ export const StartGameForm: FC<StartGameFormProps> = ({
   return (
     <form
       className="flex flex-col gap-4"
-      onSubmit={form.handleSubmit(handleSubmit)}>
-      <Controller
-        name="numberOfSpies"
-        control={form.control}
-        render={({ field, fieldState }) => (
-          <Field>
-            <FieldLabel>{dict.setup.numberOfSpies}</FieldLabel>
-            <Input
-              {...field}
-              type="number"
-              min={1}
-              max={maxSpies}
-              disabled={watchRandomSpies}
-              aria-invalid={fieldState.invalid}
-            />
-            <FieldError />
-          </Field>
-        )}
-      />
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}>
+      <form.Field name="numberOfSpies">
+        {(field) => {
+          const isInvalid =
+            field.state.meta.isTouched && !field.state.meta.isValid;
 
-      <Controller
-        name="randomNumberOfSpies"
-        control={form.control}
-        render={({ field }) => (
-          <Field>
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="randomSpies"
-                checked={field.value}
-                onCheckedChange={field.onChange}
+          return (
+            <Field>
+              <FieldLabel>{dict.setup.numberOfSpies}</FieldLabel>
+              <Input
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                onBlur={() => field.handleBlur()}
+                type="number"
+                min={1}
+                max={maxSpies}
+                disabled={watchRandomSpies}
+                aria-invalid={isInvalid}
               />
-              <FieldLabel htmlFor="randomSpies" className="cursor-pointer">
-                {dict.setup.randomNumberOfSpies}
-              </FieldLabel>
-            </div>
-            {field.value && (
-              <FieldDescription className="mt-1">
-                {dict.setup.randomWarning}
-              </FieldDescription>
-            )}
-          </Field>
-        )}
-      />
+              {isInvalid && <FieldError errors={field.state.meta.errors} />}
+            </Field>
+          );
+        }}
+      </form.Field>
+
+      <form.Field name="randomNumberOfSpies">
+        {(field) => {
+          const isInvalid =
+            field.state.meta.isTouched && !field.state.meta.isValid;
+          return (
+            <Field>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="randomSpies"
+                  checked={field.state.value}
+                  onCheckedChange={(value) =>
+                    field.handleChange(Boolean(value))
+                  }
+                />
+                <FieldLabel htmlFor="randomSpies" className="cursor-pointer">
+                  {dict.setup.randomNumberOfSpies}
+                </FieldLabel>
+              </div>
+              {field.state.value && (
+                <FieldDescription className="mt-1">
+                  {dict.setup.randomWarning}
+                </FieldDescription>
+              )}
+              {isInvalid && <FieldError errors={field.state.meta.errors} />}
+            </Field>
+          );
+        }}
+      </form.Field>
 
       <Button
         type="submit"

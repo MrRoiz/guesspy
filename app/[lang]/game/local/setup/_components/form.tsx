@@ -1,11 +1,10 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 import { useAtom } from 'jotai';
 import { Plus, XIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { type FC, useEffect, useRef } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { type FC, useMemo } from 'react';
 import z from 'zod';
 import type { Dictionary } from '@/dictionaries';
 import { MIN_PLAYERS } from '@/game/_constants';
@@ -29,7 +28,13 @@ import {
   InputGroupInput,
 } from '@/primitives/components/ui/input-group';
 
-const defaultValues = {
+export type LocalGameFormType = {
+  players: { name: string }[];
+  numberOfSpies: string;
+  randomNumberOfSpies: boolean;
+};
+
+const defaultValues: LocalGameFormType = {
   players: Array.from({ length: MIN_PLAYERS }).map(() => ({ name: '' })),
   numberOfSpies: '1',
   randomNumberOfSpies: false,
@@ -57,68 +62,45 @@ const createLocalGameFormSchema = (dict: Dictionary) =>
       },
     );
 
-export type LocalGameFormSchema = z.infer<
-  ReturnType<typeof createLocalGameFormSchema>
->;
-
 export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
   dict,
   lang,
 }) => {
-  const [gameSettings, setGameSettings] = useAtom(gameSettingsAtom);
-  const localGameFormSchema = createLocalGameFormSchema(dict);
-  const hasHydrated = useRef(false);
-
-  const form = useForm<z.infer<typeof localGameFormSchema>>({
-    defaultValues,
-    resolver: zodResolver(localGameFormSchema),
-  });
-
-  useEffect(() => {
-    const { unsubscribe } = form.watch((value) => {
-      const result = localGameFormSchema.safeParse(value);
-      if (form.formState.isDirty && result.success) {
-        setGameSettings(result.data);
-      }
-    });
-    return () => unsubscribe();
-  }, [
-    form.watch,
-    form.formState.isDirty,
-    localGameFormSchema,
-    setGameSettings,
-  ]);
-
-  useEffect(() => {
-    if (hasHydrated.current) {
-      return;
-    }
-    if (gameSettings.players.length >= MIN_PLAYERS) {
-      hasHydrated.current = true;
-      form.reset(gameSettings);
-    }
-  }, [gameSettings, form.reset]);
-
-  const {
-    fields: players,
-    append: addPlayer,
-    remove: removePlayer,
-  } = useFieldArray({
-    control: form.control,
-    name: 'players',
-  });
   const router = useRouter();
+  const [gameSettings, setGameSettings] = useAtom(gameSettingsAtom);
+  const schema = useMemo(() => createLocalGameFormSchema(dict), [dict]);
 
-  const randomNumberOfSpies = form.watch('randomNumberOfSpies');
+  const form = useForm({
+    defaultValues: gameSettings,
+    validators: {
+      onChange: schema,
+      onSubmit: schema,
+    },
+    listeners: {
+      onChange: ({ formApi }) => {
+        if (formApi.state.isDirty) {
+          setGameSettings(formApi.state.values);
+        }
+      },
+    },
+    onSubmit: ({ value }) => {
+      setGameSettings(value);
+      router.push(`/${lang}/game/local/play`);
+    },
+  });
 
-  const handleSubmit = (payload: z.infer<typeof localGameFormSchema>) => {
-    setGameSettings(payload);
-    router.push(`/${lang}/game/local/play`);
-  };
+  const randomNumberOfSpies = useStore(
+    form.store,
+    (state) => state.values.randomNumberOfSpies,
+  );
 
   return (
     <div>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit();
+        }}>
         <FieldSet>
           <FieldLegend>{dict.setup.title}</FieldLegend>
           <FieldDescription>
@@ -128,103 +110,122 @@ export const LocalUsersForm: FC<{ dict: Dictionary; lang: string }> = ({
             )}
           </FieldDescription>
           <FieldGroup>
-            <Controller
-              control={form.control}
-              name="numberOfSpies"
-              render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="flex sm:flex-row">
-                  <FieldLabel>{dict.setup.numberOfSpies}</FieldLabel>
-                  <div>
-                    <Input
-                      {...field}
-                      disabled={randomNumberOfSpies}
-                      placeholder={dict.setup.numberOfSpiesPlaceholder}
-                      type="number"
-                    />
-                    <FieldError errors={[fieldState.error]} />
-                  </div>
-                </Field>
-              )}
-            />
-            <Controller
-              control={form.control}
-              name="randomNumberOfSpies"
-              render={({ field: { value, onChange }, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <div className="flex justify-between">
-                    <FieldLabel>{dict.setup.randomNumberOfSpies}</FieldLabel>
+            <form.Field name="numberOfSpies">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid} className="flex sm:flex-row">
+                    <FieldLabel>{dict.setup.numberOfSpies}</FieldLabel>
                     <div>
-                      <Checkbox
-                        onCheckedChange={(value) => {
-                          onChange(value);
-                          form.trigger('numberOfSpies');
-                        }}
-                        checked={value}
+                      <Input
+                        disabled={randomNumberOfSpies}
+                        placeholder={dict.setup.numberOfSpiesPlaceholder}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={() => field.handleBlur()}
+                        type="number"
                       />
-                    </div>
-                  </div>
-                  {value && (
-                    <small className="text-yellow-400">
-                      {dict.setup.randomWarning}
-                    </small>
-                  )}
-                </Field>
-              )}
-            />
-            {players.map((player, index) => (
-              <Controller
-                key={player.id}
-                control={form.control}
-                name={`players.${index}.name`}
-                render={({ field, fieldState }) => (
-                  <Field
-                    data-invalid={fieldState.invalid}
-                    className="flex sm:flex-row">
-                    <FieldLabel>
-                      {dict.setup.playerLabel.replace(
-                        '{index}',
-                        String(index + 1),
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
                       )}
-                    </FieldLabel>
-                    <div>
-                      <InputGroup>
-                        <InputGroupInput
-                          {...field}
-                          aria-invalid={fieldState.invalid}
-                          placeholder={dict.setup.playerPlaceholder.replace(
-                            '{index}',
-                            String(index + 1),
-                          )}
-                        />
-                        {players.length > MIN_PLAYERS && (
-                          <InputGroupAddon align="inline-end">
-                            <InputGroupButton
-                              type="button"
-                              variant="ghost"
-                              size="icon-xs"
-                              onClick={() => removePlayer(index)}
-                              aria-label={dict.setup.removePlayer.replace(
-                                '{index}',
-                                String(index + 1),
-                              )}>
-                              <XIcon />
-                            </InputGroupButton>
-                          </InputGroupAddon>
-                        )}
-                      </InputGroup>
-                      <FieldError errors={[fieldState.error]} />
                     </div>
                   </Field>
-                )}
-              />
-            ))}
+                );
+              }}
+            </form.Field>
+            <form.Field name="randomNumberOfSpies">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <div className="flex justify-between">
+                      <FieldLabel>{dict.setup.randomNumberOfSpies}</FieldLabel>
+                      <div>
+                        <Checkbox
+                          onCheckedChange={(checked) => {
+                            field.handleChange(Boolean(checked));
+                          }}
+                          checked={field.state.value}
+                        />
+                      </div>
+                    </div>
+                    {field.state.value && (
+                      <small className="text-yellow-400">
+                        {dict.setup.randomWarning}
+                      </small>
+                    )}
+                  </Field>
+                );
+              }}
+            </form.Field>
+            <form.Field name="players">
+              {(fields) =>
+                fields.state.value.map((_, index) => (
+                  <form.Field
+                    name={`players[${index}].name`}
+                    // biome-ignore lint/suspicious/noArrayIndexKey: There's no better unique identifier for these fields
+                    key={index}>
+                    {(field) => {
+                      const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid;
+                      return (
+                        <Field
+                          data-invalid={isInvalid}
+                          className="flex sm:flex-row">
+                          <FieldLabel>
+                            {dict.setup.playerLabel.replace(
+                              '{index}',
+                              String(index + 1),
+                            )}
+                          </FieldLabel>
+                          <div>
+                            <InputGroup>
+                              <InputGroupInput
+                                value={field.state.value}
+                                onChange={(e) =>
+                                  field.handleChange(e.target.value)
+                                }
+                                onBlur={field.handleBlur}
+                                aria-invalid={isInvalid}
+                                placeholder={dict.setup.playerPlaceholder.replace(
+                                  '{index}',
+                                  String(index + 1),
+                                )}
+                              />
+                              {fields.state.value.length > MIN_PLAYERS && (
+                                <InputGroupAddon align="inline-end">
+                                  <InputGroupButton
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon-xs"
+                                    onClick={() => fields.removeValue(index)}
+                                    aria-label={dict.setup.removePlayer.replace(
+                                      '{index}',
+                                      String(index + 1),
+                                    )}>
+                                    <XIcon />
+                                  </InputGroupButton>
+                                </InputGroupAddon>
+                              )}
+                            </InputGroup>
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </div>
+                        </Field>
+                      );
+                    }}
+                  </form.Field>
+                ))
+              }
+            </form.Field>
             <div className="flex gap-2 *:flex-1">
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => addPlayer({ name: '' })}>
+                onClick={() => form.pushFieldValue('players', { name: '' })}>
                 <Plus />
                 {dict.setup.addPlayer}
               </Button>

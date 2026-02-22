@@ -1,6 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from '@tanstack/react-form';
 import type { FC } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { Button } from '@/_primitives/components/ui/button';
 import {
@@ -26,23 +25,41 @@ export const PlayerForm: FC<Props> = ({ dict, onSubmit }) => {
     defaultValues: {
       name: '',
     },
-    resolver: zodResolver(formSchema),
+    validators: {
+      onChange: formSchema,
+      onSubmit: formSchema,
+    },
+    onSubmit: ({ value }) => {
+      onSubmit(value);
+    },
   });
 
   return (
-    <form className="max-w-[1000px]" onSubmit={form.handleSubmit(onSubmit)}>
-      <Controller
-        name="name"
-        control={form.control}
-        render={({ field, fieldState }) => (
-          <Field>
-            <FieldLabel>{dict.room.enterName}</FieldLabel>
-            <Input {...field} aria-invalid={fieldState.invalid} />
-            <FieldDescription>{dict.room.nameDescription}</FieldDescription>
-            <FieldError />
-          </Field>
-        )}
-      />
+    <form
+      className="max-w-[1000px]"
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}>
+      <form.Field name="name">
+        {(field) => {
+          const isInvalid =
+            field.state.meta.isTouched && !field.state.meta.isValid;
+
+          return (
+            <Field>
+              <FieldLabel>{dict.room.enterName}</FieldLabel>
+              <Input
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                aria-invalid={isInvalid}
+              />
+              <FieldDescription>{dict.room.nameDescription}</FieldDescription>
+              {isInvalid && <FieldError errors={field.state.meta.errors} />}
+            </Field>
+          );
+        }}
+      </form.Field>
       <Button className="mt-4 w-full">{dict.room.joinRoom}</Button>
     </form>
   );

@@ -1,7 +1,7 @@
 import { atomWithStorage } from 'jotai/utils';
-import type { LocalGameFormSchema } from '@/game/local/setup/_components/form';
+import type { LocalGameFormType } from '../local/setup/_components/form';
 
-export const gameSettingsAtom = atomWithStorage<LocalGameFormSchema>(
+export const gameSettingsAtom = atomWithStorage<LocalGameFormType>(
   'gameSettings',
   {
     players: [],
